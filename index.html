@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./style.css" rel="stylesheet" type="text/css" />
 </head>
+
 <body>
     <h1 class="container" style="text-align: center;">Login Form</h1>
     <form>
@@ -23,7 +25,7 @@
     </div>
 
     <div class="container">
-        <button type="button" onclick="demo()" class="cancelbtn">Cancel</button>
+        <button type="button" class="cancelbtn">Cancel</button>
         <span class="psw">Forgot <a href="#">password?</a></span>
     </div>
 
@@ -47,10 +49,6 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
 
-        function demo() {
-            alert('hello....')
-        }
-
         function signup() {
             let email = document.getElementById("name").value;
             let password = document.getElementById("password").value;
@@ -64,20 +62,17 @@
                 .catch((error) => {
                     var errorCode = error.code;
                     var errorMessage = error.message;
-                    // ..
+                    console.error("Login error:", errorCode, errorMessage);
                 });
-
         }
 
         function logIn() {
             let email = document.getElementById("name").value;
             let password = document.getElementById("password").value;
-            firebase
-                .auth()
-                .signInWithEmailAndPassword(email, password)
+            firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     var user = userCredential.user;
-                    console.log('User: ', user);
+                    console.log('User signed in successfully... \n', user);
                 })
                 .catch((error) => {
                     var errorCode = error.code;
@@ -87,5 +82,4 @@
         }
     </script>
 </body>
-
 </html>
