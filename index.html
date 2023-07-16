@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./style.css" rel="stylesheet" type="text/css" />
 </head>
-
 <body>
     <h1 class="container" style="text-align: center;">Login Form</h1>
     <form>
@@ -19,19 +17,21 @@
             <input id="password" type="password" placeholder="Enter Password" name="psw">
         </div>
     </form>
-    <button onclick="logIn()">Login</button>
-    <button>Signup</button>
     <div class="container">
-        <button type="button" class="cancelbtn">Cancel</button>
+        <button onclick="signup()">Signup</button>
+        <button onclick="logIn()">Login</button>
+    </div>
+
+    <div class="container">
+        <button type="button" onclick="demo()" class="cancelbtn">Cancel</button>
         <span class="psw">Forgot <a href="#">password?</a></span>
     </div>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics.js";
+    <!-- Add Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
 
+    <script type="text/javascript">
         // Your web app's Firebase configuration
         const firebaseConfig = {
             // Your Firebase config here
@@ -45,32 +45,31 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        firebase.initializeApp(firebaseConfig);
 
-        // async function login(event) {
-        //     event.preventDefault(); // Prevent default form submission behavior
+        function demo() {
+            alert('hello....')
+        }
 
+        function signup() {
+            let email = document.getElementById("name").value;
+            let password = document.getElementById("password").value;
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    var user = userCredential.user;
+                    console.log("user created successfully.... \n", user)
+                    // ...
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // ..
+                });
 
-
-        //     try {
-        //         const userCredential = await signInWithEmailAndPassword(getAuth(app), email, password);
-        //         // User signed in successfully
-        //         const user = userCredential.user;
-        //         // ...
-        //     } 
-        //     catch (error) {
-        //         const errorCode = error.code;
-        //         const errorMessage = error.message;
-        //         // Handle sign-in error
-        //         // ...
-        //     }
-        // }
-
+        }
 
         function logIn() {
-            // var email = emailInput.value;
-            // var password = passwordInput.value;
             let email = document.getElementById("name").value;
             let password = document.getElementById("password").value;
             firebase
@@ -79,7 +78,6 @@
                 .then((userCredential) => {
                     var user = userCredential.user;
                     console.log('User: ', user);
-
                 })
                 .catch((error) => {
                     var errorCode = error.code;
@@ -87,7 +85,6 @@
                     console.error("Login error:", errorCode, errorMessage);
                 });
         }
-
     </script>
 </body>
 
