@@ -25,8 +25,8 @@
     </div>
 
     <div class="container">
-        <button type="button" class="cancelbtn">Cancel</button>
         <span class="psw">Forgot <a href="#">password?</a></span>
+        <button onclick="readUserData()">Get Users</button>
     </div>
 
     <!-- Add Firebase JavaScript SDK -->
@@ -36,7 +36,6 @@
     <script type="text/javascript">
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            // Your Firebase config here
             apiKey: "AIzaSyCqfdF2thW5atrQaW5wbGVpNKpD4RehSW0",
             authDomain: "smit-b2.firebaseapp.com",
             projectId: "smit-b2",
@@ -48,6 +47,8 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        // Initialize Realtime Database and get a reference to the service
+        const database = firebase.database();
 
         function signup() {
             let email = document.getElementById("name").value;
@@ -56,7 +57,9 @@
                 .then((userCredential) => {
                     // Signed in 
                     var user = userCredential.user;
+                    writeUserData(user.uid, email, password);
                     console.log("user created successfully.... \n", user)
+
                     // ...
                 })
                 .catch((error) => {
@@ -69,17 +72,55 @@
         function logIn() {
             let email = document.getElementById("name").value;
             let password = document.getElementById("password").value;
+
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     var user = userCredential.user;
-                    console.log('User signed in successfully... \n', user);
+                    getUser(user.uid);
+                    console.log('User signed in successfully... \n');
+
                 })
                 .catch((error) => {
                     var errorCode = error.code;
                     var errorMessage = error.message;
-                    console.error("Login error:", errorCode, errorMessage);
+                    console.log("Login error:", errorCode, errorMessage);
                 });
+        }
+
+        function writeUserData(userId, email, password) {
+            firebase.database().ref('users/' + userId).set({
+                userId: userId,
+                email: email,
+                password: password
+            });
+        }
+
+        function readUserData() {
+            const dbRef = firebase.database().ref();
+            dbRef.child("users").get().then((snapshot) => {
+                if (snapshot.exists()) {
+                    console.log(snapshot.val());
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
+        }
+
+        function getUser(userId) {
+            const dbRef = firebase.database().ref();
+            dbRef.child("users").child(userId).get().then((snapshot) => {
+                if (snapshot.exists()) {
+                    console.log(snapshot.val());
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
         }
     </script>
 </body>
+
 </html>
